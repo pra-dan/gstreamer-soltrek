@@ -105,3 +105,27 @@ gst_object_unref (bus);
 gst_element_set_state (pipeline, GST_STATE_NULL);
 gst_object_unref (pipeline);
 ```
+
+## Notes
+- Generally, once the pipeline is setup & running, our main function
+just sits and waits to receive an ERROR or EOS through the bus. This can be changed using `GstQuery`
+
+- Playback for any offline file can be implemented using a url beginning with `file://`. For instance, to play the file `/home/virus/Desktop/gst-tutorials/sintel_trailer-480p.webm`
+```
+"playbin uri=file:///home/virus/Desktop/gst-tutorials/sintel_trailer-480p.webm"
+```
+
+- Time in GStreamer is always specified in `GstClockTime`, meaning, that the time units (in s and ms), should be multiplied with `GST_SECOND` and `GST_MSECOND`.
+
+- Seeks and time queries generally only get a valid reply when in the PAUSED or PLAYING state, since all elements have had a chance to receive information and configure themselves.
+
+## Real-time streaming using Realsense with gstreamer
+A basic way to just check the connectivity using no-code method is to connect the camera, check if the device shows up as `/dev/videoX` where X is usually 2 and running
+```console
+gst-launch-1.0 v4l2src device='/dev/video2' ! videoconvert ! ximagesink
+```
+A screen with the live feed should pop up. This can also be done using code as in [gstreamer_realsense.c](gstreamer_realsense.c).
+
+
+## Resources:
+- [GStreamer real life examples](http://4youngpadawans.com/gstreamer-real-life-examples/)
